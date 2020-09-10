@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show]
+  before_action :set_followers, only: [:view_followers]
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_referer_or_path
 
   def index
@@ -11,14 +12,13 @@ class UsersController < ApplicationController
 
   def view_followers
     begin
-      @followers = client.followers(user.username)
-
       @followers.each do |follower|
-        find_or_create_followers(user, follower.screen_name)
+        follower = Follower.find_or_create_by(username: follower.screen_name)
+        user.followers << follower unless user.followers.exists?(follower.id)
       end
     rescue Twitter::Error::TooManyRequests => error
       @followers = []
-      flash.now[:notice] = too_many_requests(error, user)
+      flash.now[:notice] = too_many_requests(error)
     end
   end
 
@@ -26,6 +26,10 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def set_followers
+    @followers = client.followers(user.username)
   end
 
   def client
@@ -44,18 +48,7 @@ class UsersController < ApplicationController
     @user ||= User.find_or_create_by(username: username)
   end
 
-  def find_or_create_followers(user, screen_name)
-    follower = Follower.find_or_create_by(username: screen_name)
-
-    if user.followers.where(username: follower.username).exists?
-      p "Follower #{follower.username} already in database."
-    else
-      user.followers << follower
-      p "Follower #{follower.username} created."
-    end
-  end
-
-  def too_many_requests(error, user)
+  def too_many_requests(error)
     <<-ERROR
     Error fetching Twitter followers: #{error}.
     These will automatically be processed so you will be able to see them
@@ -65,6 +58,7 @@ class UsersController < ApplicationController
 
   def redirect_to_referer_or_path
     flash[:notice] = "Sorry, the app has had a little hiccup! Please try again."
+
     redirect_to request.referer
   end
 end

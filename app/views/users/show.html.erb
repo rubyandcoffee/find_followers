@@ -1,6 +1,7 @@
-<p>
-  <strong>Username:</strong>
-  <%= @user.username %>
-</p>
+<%= link_to 'Home', users_path %>
 
-<%= link_to 'Back to home page', users_path %>
+<h3>Followers for <%= @user.username %> (<%= @user.followers.count %> total)</h3>
+
+<% @user.followers.each do |follower| %>
+  <p><%= follower.username %></p>
+<% end %>

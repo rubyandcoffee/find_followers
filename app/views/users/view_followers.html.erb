@@ -1,0 +1,8 @@
+<%= link_to 'Home', root_url %>
+
+<% flash.each do |type, msg| %>
+  <p><%= msg %></p>
+<% end %>
+<% @followers.each do |follower| %>
+  <p><%= follower.screen_name %></p>
+<% end %>

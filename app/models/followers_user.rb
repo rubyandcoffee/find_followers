@@ -1,0 +1,2 @@
+class FollowersUser < ApplicationRecord
+end

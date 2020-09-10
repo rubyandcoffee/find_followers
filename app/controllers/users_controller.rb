@@ -13,8 +13,7 @@ class UsersController < ApplicationController
   def view_followers
     begin
       @followers.each do |follower|
-        follower = Follower.find_or_create_by(username: follower.screen_name)
-        user.followers << follower unless user.followers.exists?(follower.id)
+        CreateFollowersWorker.perform_async(user.id, follower.screen_name)
       end
     rescue Twitter::Error::TooManyRequests => error
       @followers = []

@@ -14,10 +14,16 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'twitter'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
+end
+
+group :test do
+  gem 'rspec-sidekiq'
   gem 'webmock'
   gem 'vcr'
 end

@@ -22,6 +22,7 @@
   </p>
 
   <h3>Current users</h3>
+  <p>Click below to view the followers stored in the database for a given user:
   <% if @users.exists? %>
     <% @users.each do |user| %>
       <p><%= link_to user.username, user %></p>

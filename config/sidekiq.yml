@@ -1,0 +1,5 @@
+:schedule:
+  update_followers:
+    # cron: '0 * * * * *' # Runs when second = 0
+    every: '12h'
+    class: BatchFetchFollowersWorker

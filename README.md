@@ -14,6 +14,10 @@ You can use this app to find followers of a given user.
 
 2) You'll be redirected to the appropriate user page and all the stored followers will be returned to you.
 
+##### Bonus
+
+After users and followers have been stored in the database, these followers are updated periodically every 12 hours using a batch worker.
+
 ### About the app
 
 This app uses the `twitter` gem to query the Twitter API.
@@ -23,6 +27,15 @@ It uses VCR to mock the API calls.
 It also uses Sidekiq and Redis to queue workers so that the user doesn't have to wait around for the followers to be stored in the database.
 
 It is deployed on Heroku via: https://find-followers.herokuapp.com/
+
+IMPORTANT: Occassionally you may not be able to search for users due to the following error:
+
+`Twitter::Error::TooManyRequests - Rate limit exceeded`
+
+For more information see here:
+https://blog.twitter.com/en_us/a/2008/what-does-rate-limit-exceeded-mean-updated.html
+
+If this happens, you may have to wait up to an hour for it to work again.
 
 ### Setup
 

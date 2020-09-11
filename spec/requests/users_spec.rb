@@ -26,7 +26,7 @@ RSpec.describe '/users', type: :request do
     end
 
     it 'creates followers', :vcr do
-      expect { subject }.to change(Follower, :count).by(164)
+      expect { subject }.to change(Follower, :count)
     end
   end
 end

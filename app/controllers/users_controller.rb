@@ -12,8 +12,8 @@ class UsersController < ApplicationController
 
   def view_followers
     begin
-      @followers.each do |follower|
-        CreateFollowersWorker.perform_async(user.id, follower.screen_name)
+      @followers.each do |follower_username|
+        CreateFollowersWorker.perform_async(user.id, follower_username)
       end
     rescue Twitter::Error::TooManyRequests => error
       @followers = []
@@ -28,11 +28,7 @@ class UsersController < ApplicationController
   end
 
   def set_followers
-    @followers = client.followers(user.username)
-  end
-
-  def client
-    @client ||= TwitterClient.client
+    @followers ||= TwitterFollowerAdapter.adapt(user.username)
   end
 
   def twitter_search_params

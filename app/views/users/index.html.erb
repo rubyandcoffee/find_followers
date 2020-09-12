@@ -1,33 +1,37 @@
-<div class="text-center">
-  <% flash.each do |type, msg| %>
-    <p><%= msg %></p>
-  <% end %>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h1>Twitter Follower Search</h1>
+    <p>Enter a Twitter username below to search for their followers!</p>
 
-  <h1>Twitter Follower Search</h1>
-  <p>Enter a Twitter username below to search for their followers!</p>
-
-  <%= form_for :twitter_search, url: 'view_followers' do |f| %>
-    <div class="field">
-      <%= f.text_field :username, placeholder: 'rubyandcoffee', required: 'required' %>
-      <%= f.submit 'Find followers' %>
-    </div>
-  <% end %>
-
-  <p>
-    <b>Note:</b> When you search, that username will automatically be used to
-    create a user in the database.
-  </p>
-  <p>All follower usernames will also be stored in
-    the database.
-  </p>
-
-  <h3>Current users</h3>
-  <p>Click below to view the followers stored in the database for a given user:
-  <% if @users.exists? %>
-    <% @users.each do |user| %>
-      <p><%= link_to user.username, user %></p>
+    <%= form_for :twitter_search, url: 'view_followers' do |f| %>
+      <div class="field">
+        <%= f.text_field :username, placeholder: 'rubyandcoffee', required: 'required' %>
+        <%= f.submit 'Find followers', class:"btn btn-primary" %>
+      </div>
     <% end %>
-  <% else %>
-    <p>There are no current users.</p>
-  <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <p>
+      <b>Note:</b> When you search, that username will automatically be used to
+      create a user in the database.
+    </p>
+    <p>All follower usernames will also be stored in
+      the database.
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h3>Current users</h3>
+    <% if @users.exists? %>
+      <p>Click below to view the followers stored in the database for a given user:</p>
+      <% @users.each do |user| %>
+        <p><%= link_to user.username, user %></p>
+      <% end %>
+    <% else %>
+      <p>Looks like no users have been searched for yet!</p>
+    <% end %>
+  </div>
 </div>

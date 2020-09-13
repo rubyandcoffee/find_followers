@@ -6,5 +6,15 @@
     <% @user.followers.each do |follower| %>
       <p><%= follower.username %></p>
     <% end %>
+
+    <% if @user.followers.empty? %>
+      <p>
+        If you were expecting to see followers here, it may be because the
+        worker hasn't quite stored it in the database yet.
+      </p>
+      <p>This could be due to Twitter's 'too many requests' error.
+        Keep checking back - it will be here later!
+      </p>
+    <% end %>
   </div>
 </div>

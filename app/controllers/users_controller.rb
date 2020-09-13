@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show]
   before_action :set_followers, only: [:view_followers]
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_referer_or_path
+  rescue_from Twitter::Error::TooManyRequests, with: :too_many_requests_error
 
   def index
     @users = User.all
@@ -11,13 +12,8 @@ class UsersController < ApplicationController
   end
 
   def view_followers
-    begin
-      @followers.each do |follower_username|
-        CreateFollowersWorker.perform_async(user.id, follower_username)
-      end
-    rescue Twitter::Error::TooManyRequests => error
-      @followers = []
-      flash.now[:notice] = too_many_requests(error)
+    @followers.each do |follower_username|
+      CreateFollowersWorker.perform_async(user.id, follower_username)
     end
   end
 
@@ -28,7 +24,7 @@ class UsersController < ApplicationController
   end
 
   def set_followers
-    @followers ||= TwitterFollowerAdapter.adapt(user.username)
+    @followers = TwitterFollowerAdapter.adapt(user.username)
   end
 
   def twitter_search_params
@@ -43,17 +39,15 @@ class UsersController < ApplicationController
     @user ||= User.find_or_create_by(username: username)
   end
 
-  def too_many_requests(error)
-    <<-ERROR
-    Error fetching Twitter followers: #{error}.
-    These will automatically be processed so you will be able to see them
-    on the user page shortly.
-    ERROR
-  end
-
   def redirect_to_referer_or_path
     flash[:notice] = "Sorry, the app has had a little hiccup! Please try again."
 
     redirect_to request.referer
+  end
+
+  def too_many_requests_error
+    flash[:notice] = "Sorry, too many requests! Please try again later - this may take upwards of one hour."
+
+    redirect_to root_url
   end
 end

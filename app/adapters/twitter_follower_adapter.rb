@@ -11,9 +11,7 @@ class TwitterFollowerAdapter
   end
 
   def adapt
-    followers.each_with_object([]) do |follower, arr|
-      arr << follower.screen_name
-    end
+    followers.map { |follower| follower.screen_name }
   end
 
   private

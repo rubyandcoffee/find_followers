@@ -1,12 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe '/users', type: :request do
-
   describe 'GET /index' do
+    subject { get users_path }
+
     it 'renders a successful response' do
-      get users_url
+      subject
 
       expect(response).to be_successful
+    end
+
+    it 'has a status of 200 OK' do
+      subject
+
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe 'GET /show' do
+    let(:user) { User.create }
+
+    subject { get user_url(user) }
+
+    it 'renders a successful response' do
+      subject
+
+      expect(response).to be_successful
+    end
+
+    it 'has a status of 200 OK' do
+      subject
+
+      expect(response.status).to eq(200)
     end
   end
 

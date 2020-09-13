@@ -40,7 +40,7 @@ class UsersController < ApplicationController
   end
 
   def redirect_to_referer_or_path
-    flash[:notice] = "Sorry, the app has had a little hiccup! Please try again."
+    flash[:notice] = "Sorry, your token has expired! Please try again."
 
     redirect_to request.referer
   end
